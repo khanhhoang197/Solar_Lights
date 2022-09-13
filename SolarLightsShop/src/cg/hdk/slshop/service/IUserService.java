@@ -7,6 +7,7 @@ import java.util.List;
 public interface IUserService {
     List<User> findAll();
     User adminLogin(String username, String password);
+    User memberLogin(String username, String password);
     void add(User newUser);
     void update(User newUser);
     void revome(Long id);

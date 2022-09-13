@@ -35,8 +35,23 @@ public class UserService implements IUserService {
     @Override
     public User adminLogin(String username, String password) {
         List<User> users = findAll();
+
         for (User user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password) && user.getRole().equals(Role.ADMIN)) {
+            if (user.getUsername().equals(username)
+                    && user.getPassword().equals(password))
+
+                 return user;
+            }
+        return null;
+    }
+
+    @Override
+    public User memberLogin(String username, String password) {
+        List<User> users = findAll();
+        for (User user : users) {
+
+
+            if (user.getUsername().equals(username) && user.getPassword().equals(password) && user.getRole().equals(Role.USER)) {
                 return user;
             }
         }
@@ -55,8 +70,8 @@ public class UserService implements IUserService {
     @Override
     public void update(User newUser) {
         List<User> users = findAll();
-        for (User user : users){
-            if (user.getIdUser() == newUser.getIdUser()){
+        for (User user : users) {
+            if (user.getIdUser() == newUser.getIdUser()) {
                 String fullName = newUser.getFullName();
                 if (fullName != null && !fullName.isEmpty())
                     user.setFullName(fullName);
@@ -64,7 +79,7 @@ public class UserService implements IUserService {
                 if (phone != null && !phone.isEmpty())
                     user.setPhoneNumber(newUser.getPhoneNumber());
                 String address = newUser.getAddress();
-                if (address !=null && !address.isEmpty())
+                if (address != null && !address.isEmpty())
                     user.setAddress(newUser.getAddress());
                 user.setTimeUpdate(Instant.now());
                 CSVUtils.write(PATH, users);
@@ -72,22 +87,20 @@ public class UserService implements IUserService {
             }
 
         }
-
-
     }
 
     @Override
     public void revome(Long id) {
-    List<User> users = findAll();
-    for (User user : users){
-        if (user.getIdUser().equals(id)){
-            users.remove(user);
-            break;
-        }else {
-            System.out.println("Id không tồn tại");
+        List<User> users = findAll();
+        for (User user : users) {
+            if (user.getIdUser() == (id)) {
+                users.remove(user);
+                break;
+            } else {
+                System.out.println("Id không tồn tại");
+            }
         }
-    }
-    CSVUtils.write(PATH, users);
+        CSVUtils.write(PATH, users);
     }
 
     @Override
@@ -135,8 +148,6 @@ public class UserService implements IUserService {
         return null;
     }
 
-    public static void main(String[] args) {
-        UserService userService = new UserService();
-//        userService.add();
-    }
 }
+
+

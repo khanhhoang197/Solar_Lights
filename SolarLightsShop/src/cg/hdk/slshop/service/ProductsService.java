@@ -4,6 +4,7 @@ import cg.hdk.slshop.model.ProductsManager;
 import cg.hdk.slshop.utils.CSVUtils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProductsService extends ProductsManager implements IProductService {
@@ -43,15 +44,25 @@ public class ProductsService extends ProductsManager implements IProductService 
     }
 
     @Override
-    public void addProducts(ProductsService newProducts) {
+    public void addProducts(ProductsManager newProducts) {
         List<ProductsManager> products = findAllProducts();
         products.add(newProducts);
+        CSVUtils.write(PATH, products);
+    }
+
+    @Override
+    public void removeProducts(Long id) {
+        List<ProductsManager> products = findAllProducts();
+        for (ProductsManager oldProduct : products){
+            if (oldProduct.getIdProduct().equals(getIdProduct()))
+                products.remove(id);
+        }
         CSVUtils.write(PATH, products);
 
     }
 
     @Override
-    public void editProducts(ProductsService newProducts) {
+    public void updateProducts(ProductsManager newProducts) {
         List<ProductsManager> products = findAllProducts();
         for (ProductsManager oldProducts : products) {
             if (oldProducts.getIdProduct().equals(newProducts.getIdProduct())) {
@@ -73,19 +84,9 @@ public class ProductsService extends ProductsManager implements IProductService 
         }
     }
 
-    @Override
-    public void removeProducts(Long id) {
-        List<ProductsManager> products = findAllProducts();
-        for (ProductsManager oldProduct : products){
-            if (oldProduct.getIdProduct().equals(getIdProduct()))
-                products.remove(id);
-        }
-        CSVUtils.write(PATH, products);
-
-    }
 
     @Override
-    public void updateProducts(Long id, Double quantity) {
+    public void updateQuantity(Long id, int quantity) {
         List<ProductsManager> products = findAllProducts();
         for (ProductsManager oldProducts : products){
             if (oldProducts.getIdProduct().equals(id)){
@@ -113,5 +114,34 @@ public class ProductsService extends ProductsManager implements IProductService 
                 return product;
         }
         return null;
+    }
+    @Override
+    public List<ProductsManager> findAllOrderByPriceASC() {
+        List<ProductsManager> products = new ArrayList<>(findAllProducts());
+        products.sort(new Comparator<ProductsManager>() {
+            @Override
+            public int compare(ProductsManager o1, ProductsManager o2) {
+                double result = o1.getPrice() - o2.getPrice();
+                if (result == 0)
+                    return 0;
+                return result > 0 ? 1 : -1;
+            }
+        });
+        return products;
+    }
+
+    @Override
+    public List<ProductsManager> findAllOrderByPriceDESC() {
+        List<ProductsManager> products = new ArrayList<>(findAllProducts());
+        products.sort(new Comparator<ProductsManager>() {
+            @Override
+            public int compare(ProductsManager o1, ProductsManager o2) {
+                double result = o2.getPrice() - o1.getPrice();
+                if (result == 0)
+                    return 0;
+                return result > 0 ? 1 : -1;
+            }
+        });
+        return products;
     }
 }

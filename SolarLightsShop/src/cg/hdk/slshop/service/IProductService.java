@@ -7,11 +7,17 @@ import java.util.List;
 public interface IProductService {
     List<ProductsManager> findAllProducts();
     List<ProductsManager> findProductsByName(String name);
-    void addProducts(ProductsService newProducts);
-    void editProducts(ProductsService newProducts);
+    void addProducts(ProductsManager newProducts);
     void removeProducts(Long id);
-    void updateProducts(Long id, Double quantity);
+    void updateProducts(ProductsManager newProducts);
+    void updateQuantity(Long id, int quantity);
     boolean exitsById(Long id);
     ProductsManager checkId(Long id);
+
+    List<ProductsManager> findAllOrderByPriceASC();
+
+    List<ProductsManager> findAllOrderByPriceDESC();
+
+
 
 }

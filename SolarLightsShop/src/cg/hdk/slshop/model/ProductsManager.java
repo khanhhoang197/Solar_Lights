@@ -7,7 +7,7 @@ public class ProductsManager {
     private Long idProduct;
     private String name;
     private int quantity;
-    private Double price;
+    private double price;
     public List<ProductsManager> productsManagers;
 
     public ProductsManager() {
@@ -54,11 +54,11 @@ public class ProductsManager {
         this.quantity = quantity;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 

@@ -3,7 +3,7 @@ package cg.hdk.slshop.model;
 import java.time.Instant;
 
 public class User {
-    private Long idUser;
+    private long idUser;
     private String username;
     private String password;
     private String fullName;
@@ -18,7 +18,7 @@ public class User {
 
     }
 
-    public User(Long idUser, String username, String password, String fullName,
+    public User(long idUser, String username, String password, String fullName,
                 String phoneNumber, String address, String email, Role role) {
         this.idUser = idUser;
         this.username = username;
@@ -34,26 +34,24 @@ public class User {
         User user = new User();
         String[] array = rawUser.split(",");
         user.setIdUser(Long.parseLong(array[0]));
-        user.setFullName(array[1]);
-        user.setUsername(array[2]);
-        user.setPassword(array[3]);
+        user.setUsername(array[1]);
+        user.setPassword(array[2]);
+        user.setFullName(array[3]);
         user.setPhoneNumber(array[4]);
         user.setAddress(array[5]);
         user.setEmail(array[6]);
         user.role = Role.parseRole(array[7]);
         user.timeCreate = Instant.parse(array[8]);
         String temp = array[9];
-        if (temp != null && !temp.equals(null))
-
-            user.timeUpdate = Instant.parse(temp);
+        if (temp != null && !temp.equals("null")) user.timeUpdate = Instant.parse(temp);
         return user;
     }
 
-    public Long getIdUser() {
+    public long getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(Long idUser) {
+    public void setIdUser(long idUser) {
         this.idUser = idUser;
     }
 
