@@ -1,6 +1,5 @@
 package cg.hdk.slshop.utils;
 
-import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class AppUtils {
@@ -32,7 +31,7 @@ public class AppUtils {
                 result = Integer.parseInt(scanner.nextLine());
                 return result;
             } catch (Exception e) {
-                System.out.println("hập không hợp lệ, vui lòng nhập lại!");
+                System.out.println("Nhập không hợp lệ, vui lòng nhập lại!");
                 System.out.print("➥ ");
             }
         } while (true);
@@ -44,6 +43,7 @@ public class AppUtils {
         while (result.isEmpty()) {
             System.out.printf("%s không được để trống! \n", fieldName);
             System.out.print("➥ ");
+            break;
 
         }
         return result;
@@ -58,13 +58,12 @@ public class AppUtils {
             } catch (Exception e) {
                 System.out.println("Nhập không hợp lệ, vui lòng nhập lại (số). ");
                 System.out.print("➥ ");
-
             }
         } while (true);
     }
 
     public static Long retryParseLong() {
-        Long result;
+        long result;
         do {
             try {
                 result = Long.parseLong(scanner.nextLine());
@@ -77,23 +76,6 @@ public class AppUtils {
         }
         while (true);
     }
-
-    public static String doubleToVND(double value) {
-        String patternVND = " ,###đ";
-        DecimalFormat decimalFormat = new DecimalFormat(patternVND);
-        return decimalFormat.format(value);
-    }
-
-//    public static void exit() {
-//        System.out.println(" \nTạm biệt, hẹn gặp lại!");
-//        System.exit(5);
-//    }
-
-    public static void enterKeyToContinue() {
-        System.out.println("Please enter random keyboard to continue. ");
-        scanner.nextLine();
-    }
-
     public static boolean isRetry(InputOption inputOption) {
         do {
             switch (inputOption) {
@@ -120,19 +102,14 @@ public class AppUtils {
                 case "q":
                     return false;
                 case "t":
-                    System.out.println("Tam biet!!! hen gap lai sau!");
+                    System.out.println("Bye Bye");
                     System.exit(5);
                     break;
                 default:
-                    System.out.println("Chon chuc nang khong dung! Vui long chon lai");
+                    System.out.println("Chọn chức năng không đúng! vui lòng nhập lại");
                     break;
             }
         } while (true);
 
-    }
-
-    public static void exit() {
-        System.out.println("\tTạm biệt. Hẹn gặp lại!");
-        System.exit(5);
     }
 }

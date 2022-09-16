@@ -3,9 +3,8 @@ package cg.hdk.slshop.views;
 import cg.hdk.slshop.model.OrderHistory;
 import cg.hdk.slshop.model.OrderItem;
 import cg.hdk.slshop.model.ProductsManager;
-import cg.hdk.slshop.service.ProductsService;
 import cg.hdk.slshop.utils.CSVUtils;
-
+import cg.hdk.slshop.utils.InstantUtils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,12 +15,14 @@ import java.util.Scanner;
 
 public class OrderItemView {
     private final String PATH_ORDERITEM = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\OrderItem.csv";
+    public final static String PATH_ORDER_HISTORY = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\salesHistory.csv";
+    public final static String PATH_PRODUCT = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv";
     Scanner scanner = new Scanner(System.in);
-    List<OrderItem> orderItems = new ArrayList<>();
+    OrderView orderView = new OrderView();
+    List<OrderItem> orderItems;
 
     public OrderItemView() {
-        List<OrderItem> orderItemList = new ArrayList<>();
-        this.orderItems = orderItemList;
+        this.orderItems = new ArrayList<>();
     }
 
     public List<OrderItem> findAll() {
@@ -32,8 +33,6 @@ public class OrderItemView {
         }
         return orderItems;
     }
-
-    public final static String PATH_PRODUCT = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv";
 
     public List<ProductsManager> findAllProducts() {
         List<ProductsManager> products = new ArrayList<>();
@@ -51,8 +50,8 @@ public class OrderItemView {
         productsView.showProducts();
         System.out.print("Nhập ID sản phẩm muốn mua: ");
         Long id = Long.parseLong(scanner.nextLine());
-        double price = Double.valueOf(0);
-        double total = Double.valueOf(0);
+        double price = 0;
+        double total = 0;
         String name = "";
         int count = 0;
         for (ProductsManager product : productsManagers) {
@@ -74,6 +73,7 @@ public class OrderItemView {
         if (quantity <= 0) {
             System.out.println("Không hợp lệ, Vui lòng nhập lại.");
             addOrderItem();
+            return;
         } else {
             int countQuantity = 0;
             for (ProductsManager product : productsManagers) {
@@ -89,62 +89,65 @@ public class OrderItemView {
             if (countQuantity == 0) {
                 System.out.println("Số lượng không hợp lệ. Mời nhập lại!");
                 addOrderItem();
+                return;
             }
         }
-        OrderItem orderItem = new OrderItem(id, name, price, quantity, total);
-        orderItems.add(orderItem);
-        Instant timeCreate = Instant.now();
-        List<OrderHistory> orderHistories = OrderHistoryView.findAllOrderHistory();
-        OrderHistory orderHistory = new OrderHistory(id, name, price, quantity, total, timeCreate);
-        orderHistories.add(orderHistory);
-        CSVUtils.write("F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\salesHistory.csv", orderHistories);
-        CSVUtils.write(PATH_ORDERITEM, orderItems);
-        System.out.println("Order thành công!");
+        doubleSource(orderItems, id, price, total, name, quantity);
         showOrderItem();
-        System.out.println("Bạn có muốn tiếp tục mua hàng không? ");
-        confirm();
-        int choice = Integer.parseInt(scanner.nextLine());
+        selectOderItem();
+        String choice = scanner.nextLine();
         switch (choice) {
-            case 1:
-                boolean isTrue = true;
-                while (isTrue) {
-                    updateOrderItem();
-                    confirm();
+            case "1":
+                while (true) {
+                    choice = scanner.nextLine();
                     switch (choice) {
-                        case 1:
-                            isTrue = true;
+                        case "1":
+                            updateOrderItem();
+                            selectOderItem();
                             break;
-                        case 2:
-                            isTrue = false;
+                        case "2":
+                            editOrderItem();
+                            selectOderItem();
+                            break;
+                        case "3":
+                            showOrderItem();
+                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+                            System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
+                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+                            deleteOrderItem();
+                            selectOderItem();
+                            break;
+                        case "4":
+                            orderView.showOrder();
+                            showOrderItem();
+                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+                            System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
+                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+
+                            MemberView.menuMember();
                             break;
                         default:
                             System.out.println("Không hợp lệ, vui lòng nhập lại.");
                             updateOrderItem();
+                            break;
                     }
                 }
+            case "2":
                 break;
-            case 2:
+            default:
+                System.out.println("Không hợp lệ, vui lòng nhập lại.");
+                selectOderItem();
                 break;
         }
     }
 
-    public void confirm() {
-        System.out.println("☰☰☰☰☰☰☰☰☰   CONFIRM  ☰☰☰☰☰☰☰☰☰");
-        System.out.println("☰                                    ☰");
-        System.out.println("☰       1. Tiếp tục mua hàng         ☰");
-        System.out.println("☰       2. Xuất hóa đơn              ☰");
-        System.out.println("☰                                    ☰");
-        System.out.println("☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰☰");
-        int choice = Integer.parseInt(scanner.nextLine());
-        System.out.print("➥ ");
-    }
-
-    private void showOrderItem() {
-        System.out.printf("\n%-25s %-25s %-25s %-25s %s\n", "ID Product", "Tên Vật Phẩm", "Giá Tiền", "Số lượng", "Thành Tiền");
+    public static void showOrderItem() {
+        System.out.printf("\n    |       %-10s |            %-30s |       %-15s |    %-10s |     %-23s|\n", "ID Product", "Tên Vật Phẩm", "Giá Tiền", "Số lượng", "Thành Tiền");
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
         BufferedReader br = null;
         try {
             String line;
-            br = new BufferedReader(new FileReader("F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv"));
+            br = new BufferedReader(new FileReader(PATH_ORDER_HISTORY));
             while ((line = br.readLine()) != null) {
                 printMenuOrderItem(parseCsvLine(line));
             }
@@ -161,10 +164,17 @@ public class OrderItemView {
     }
 
     public static void printMenuOrderItem(List<String> OrderItem) {
-        System.out.printf("\n%-25s %-25s %-25s %-25s %s\n", OrderItem.get(0), OrderItem.get(1), OrderItem.get(2), OrderItem.get(3), OrderItem.get(4));
+
+        System.out.printf("    |       %-8s |    %-36s   |       %-15s |       %-8s |     %-19s   |\n",
+                OrderItem.get(0), OrderItem.get(1), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(2))), OrderItem.get(3), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(4))));
+
     }
 
     public static List<String> parseCsvLine(String csvLine) {
+        return getStrings(csvLine);
+    }
+
+    static List<String> getStrings(String csvLine) {
         List<String> result = new ArrayList<>();
         if (csvLine != null) {
             String[] splitData = csvLine.split(",");
@@ -182,8 +192,8 @@ public class OrderItemView {
         render.showProducts();
         System.out.print("Nhập ID sản phẩm cần mua: ");
         Long id = Long.parseLong(scanner.nextLine());
-        Double price = Double.valueOf(0);
-        Double total = Double.valueOf(0);
+        double price = 0;
+        double total = 0;
         String name = "";
         int count = 0;
         for (ProductsManager product : productsManagers) {
@@ -193,7 +203,6 @@ public class OrderItemView {
                 name = product.getName();
                 count++;
             }
-
         }
         if (count == 0) {
             System.out.println("ID không tồn tại vui lòng nhập lại!!");
@@ -213,39 +222,154 @@ public class OrderItemView {
                 if (tempId.equals(id) && tempQuantity >= quantity) {
                     total = product.getPrice() * quantity;
                     product.setQuantity(product.getQuantity() - quantity);
-                    CSVUtils.write("F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv", productsManagers);
+                    CSVUtils.write(PATH_ORDERITEM, productsManagers);
                     countQuantity++;
                 }
             }
-            if (countQuantity == 0) {
+            if (countQuantity <= 0) {
                 System.out.println("Số lượng không hợp lệ! Vui lòng nhập lại!!");
-                addOrderItem();
+                updateOrderItem();
                 return;
             }
         }
+        doubleSource(orderItems, id, price, total, name, quantity);
+    }
+
+    private void doubleSource(List<OrderItem> orderItems, Long id, double price, double total, String name, int quantity) {
         OrderItem orderItem = new OrderItem(id,name,price,quantity,total);
         orderItems.add(orderItem);
         Instant timeCreate = Instant.now();
         List<OrderHistory> orderHistories = OrderHistoryView.findAllOrderHistory();
-        OrderHistory orderHistory = new OrderHistory(id, name, price, quantity, total, timeCreate);
+        OrderHistory orderHistory = new OrderHistory(id,name,price,quantity,total,timeCreate);
         orderHistories.add(orderHistory);
-        CSVUtils.write("F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\salesHistory.csv", orderHistories);
+        CSVUtils.write(PATH_ORDER_HISTORY, orderHistories);
         CSVUtils.write(PATH_ORDERITEM, orderItems);
         System.out.println("Order thành công!");
     }
+
     public Double totalPrice(){
         List<OrderItem> orderItemList = findAll();
-        Double  totalPirce = Double.valueOf(0);
+        double totalPrice = 0;
         for (OrderItem orderItem: orderItemList) {
-            totalPirce += orderItem.getTotal();
+            totalPrice += orderItem.getTotal();
         }
-        return totalPirce;
+        return totalPrice;
     }
+
     public void editOrderItem(){
         List<OrderItem> orderItems = findAll();
         List<ProductsManager> productsManagers = findAllProducts();
         ProductsView render = new ProductsView();
-
+        showOrderItem();
+        System.out.println("Nhập ID của vật phẩm muốn đổi: ");
+        Long id = Long.parseLong(scanner.nextLine());
+        int count = 0;
+        for (OrderItem orderItem : orderItems) {
+            Long tamp = orderItem.getId();
+            String name = "";
+            double price =  0;
+            double total =  0;
+            long idEdit = 0;
+            int quantity = 0;
+            if (tamp.equals(id)) {
+                render.showProducts();
+                System.out.println("Nhập ID của vật phẩm mới: ");
+                idEdit = Long.parseLong(scanner.nextLine());
+                for (ProductsManager product : productsManagers) {
+                    Long tempProduct = product.getIdProduct();
+                    if (tempProduct.equals(idEdit)) {
+                        price = product.getPrice();
+                        name = product.getName();
+                    }
+                }
+                for (ProductsManager product : productsManagers) {
+                    Long tempQuantity = product.getIdProduct();
+                    if (tempQuantity.equals(idEdit)) {
+                        total = product.getPrice() * quantity;
+                    }
+                }
+            }
+            orderItem.setId(idEdit);
+            orderItem.setName(name);
+            orderItem.setPrice(price);
+            orderItem.setQuantity(quantity);
+            orderItem.setTotal(total);
+            count++;
+            CSVUtils.write(PATH_ORDERITEM, orderItems);
+            showOrderItem();
+            break;
+        }
+        if (count == 0) {
+            System.out.println("ID không tồn tại vui lòng nhập lại!");
+            editOrderItem();
+        }
+    }
+    public void deleteOrderItem() {
+        OrderItemView orderItemView =new OrderItemView();
+        List<ProductsManager> products = findAllProducts();
+        Scanner input = new Scanner(System.in);
+        List<OrderItem> orderItemList = findAll();
+        showOrderItem();
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+        System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(orderItemView.totalPrice()));
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+        System.out.println("\nNhập ID của sản phẩm muốn xóa. ");
+        System.out.print("➥ ");
+        Long id = Long.parseLong(input.nextLine());
+        int count = 0;
+        for (OrderItem orderItem : orderItemList) {
+            Long tamp = orderItem.getId();
+            if (tamp.equals(id)) {
+                count++;
+                System.out.println("----------------------------------------------------------");
+                System.out.printf("|        Bạn có chắc chắn muốn xóa '%s' ?      |\n",orderItem.getName());
+                System.out.println("----------------------------------------------------------");
+                System.out.println("Nhấn Y để xóa hoặc N để quay lại!");
+                System.out.print("➥ ");
+                String choice = input.nextLine();
+                switch (choice) {
+                    case "y":
+                        for (ProductsManager product : products){
+                            Long temp = product.getIdProduct();
+                            if (temp.equals(id)){
+                                product.setQuantity(product.getQuantity() + orderItem.getQuantity());
+                                CSVUtils.write(PATH_PRODUCT,products);
+                            }
+                        }
+                        orderItemList.remove(orderItem);
+                        CSVUtils.write(PATH_ORDERITEM, orderItemList);
+                        showOrderItem();
+                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+                        System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
+                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+                        updateOrderItem();
+                        break;
+                    case "N":
+                        return;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + choice);
+                }
+            }
+        }
+        if (count == 0) {
+            System.out.println("ID không tồn tại vui lòng nhập lại !!");
+            deleteOrderItem();
+        }
+    }
+    public void selectOderItem(){
+        System.out.println("☰☰☰☰☰☰☰☰☰   SELECT   ☰☰☰☰☰☰☰☰☰");
+        System.out.println("☰                                   ☰");
+        System.out.println("☰       1. Tiếp tục mua hàng        ☰");
+        System.out.println("☰       2. Sửa giỏ hàng             ☰");
+        System.out.println("☰       3. Xóa mặt hàng đã chọn     ☰");
+        System.out.println("☰       4. Xuất hóa đơn             ☰");
+        System.out.println("☰                                   ☰");
+        System.out.println("☰☰☰☰☰☰☰☰☰☰☰☰☰.☰☰☰☰☰☰☰☰☰☰☰☰☰");
+        System.out.print("➥ ");
     }
 
+    public static void main(String[] args) {
+        OrderItemView orderItemView =new OrderItemView();
+        orderItemView.addOrderItem();
+    }
 }

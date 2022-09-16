@@ -8,6 +8,7 @@ import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InputOption;
 import cg.hdk.slshop.utils.InstantUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,7 +25,7 @@ public class ProductsView {
     public void showProducts() {
         System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ DANH SÁCH SẢN PHẨM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓");
         System.out.printf("\t│\t\t%-6s   ││           %-35s││       %-20s   ││   %-10s        │\n", "ID", "Tên sản phẩm", "Giá sản phẩm", "Số lượng");
-        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+        System.out.println("\tㅑ二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二=二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二ㅕ");
         List<ProductsManager> products = productService.findAllProducts();
         for (ProductsManager product : products) {
             System.out.printf("\t│\t%-10s   ││   %-40s   ││    %-20s      ││     %-13s   │\n",
@@ -40,10 +41,17 @@ public class ProductsView {
     public void addProducts() {
         do {
             try {
+                List<ProductsManager> products = new ArrayList<>();
                 Long id = System.currentTimeMillis() / 1000;
                 String productName = inputName(InputOption.ADD);
                 double Price = inputPrice(InputOption.ADD);
                 int productQuantity = inputQuantity(InputOption.ADD);
+                String newProductName = scanner.nextLine();
+                for (ProductsManager product : products) {
+                    if (newProductName.equals(product.getName())) {
+                        updateProducts();
+                    }
+                }
                 ProductsManager newProducts = new ProductsManager(id, productName, productQuantity, Price);
                 productService.addProducts(newProducts);
                 System.out.println("\n Thêm sản phẩm thành công!");
@@ -95,6 +103,63 @@ public class ProductsView {
                 updateProducts();
         }
     }
+    public void removeProduct() {
+        showProducts();
+        AdminView adminView = new AdminView();
+        int count = 0;
+        System.out.println("Nhập y để tiếp tục hoặc nhập b để quay lại menu chính: ");
+        String confirm = scanner.nextLine();
+        switch (confirm){
+            case "y":
+                checkRemoveProducts();
+                break;
+            case "b":
+                adminView.productManagement();
+                break;
+            default:
+                System.out.println("chọn không họp lệ");
+                removeProduct();
+                return;
+        }
+        if (count == 0) {
+            System.out.println("ID không tồn tại! Bạn có muốn tiếp tục không?");
+            removeProduct();
+        }
+    }
+
+    public void checkRemoveProducts() {
+        List<ProductsManager> productsManagers = productService.findAllProducts();
+        System.out.println("Nhập ID muốn xóa:  ");
+        Long id = Long.parseLong(scanner.nextLine());
+        for (ProductsManager productsManager : productsManagers) {
+            Long tamp = productsManager.getIdProduct();
+            if (tamp.equals(id)) {
+                System.out.println("██████████████████   XÓA   ██████████████████");
+                System.out.println("█                                           █");
+                System.out.println("█    1. Nhập Y nếu bạn chắc chăn muốn xóa   █");
+                System.out.println("█    2. Nhập N để hủy                       █");
+                System.out.println("█                                           █");
+                System.out.println("█████████████████████████████████████████████");
+                System.out.print("➥ ");
+                String option = scanner.nextLine();
+                switch (option) {
+                    case "y":
+                        productsManagers.remove(productsManager);
+                        CSVUtils.write(PATH, productsManagers);
+                        System.out.println("Xóa thành công!");
+                        removeProduct();
+                        return;
+                    case "n":
+                        break;
+                    default:
+                        System.out.println("Nhập vào không hợp lệ! vui lòng nhập lại.");
+                        removeProduct();
+                        break;
+                }
+            }
+        }
+    }
+
 
     private long inputId(InputOption option) {
         Long id;
@@ -200,6 +265,7 @@ public class ProductsView {
         System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ DANH SÁCH SẢN PHẨM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓");
         System.out.printf("\t│\t\t%-6s   ││           %-35s││       %-20s   ││   %-10s        │\n", "ID", "Tên sản phẩm", "Giá sản phẩm", "Số lượng");
         System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+        System.out.println("\tㅑ二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二=二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二ㅕ");
         for (ProductsManager product : products) {
             System.out.printf("\t│\t%-10s   ││   %-40s   ││    %-20s      ││     %-13s   │\n",
                     product.getIdProduct(),
@@ -211,53 +277,6 @@ public class ProductsView {
         System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n");
     }
 
-    public void removeProduct() {
-        AdminView admin = new AdminView();
-        showProducts();
-        int count = 0;
-        List<ProductsManager> productsManagers = productService.findAllProducts();
-        Scanner input = new Scanner(System.in);
-        System.out.println("Nhập y để tiếp tục hoặc nhập b để quay lại menu chính: ");
-        String choice = input.nextLine();
-        switch (choice) {
-            case "y":
-                System.out.println("Nhập ID muốn xóa:  ");
-                Long id = Long.parseLong(input.nextLine());
-                for (ProductsManager productsManager : productsManagers) {
-                    Long tamp = productsManager.getIdProduct();
-                    if (tamp.equals(id)) {
-                        System.out.println("██████████████████   XÓA   ██████████████████");
-                        System.out.println("█                                           █");
-                        System.out.println("█    1. Nhập Y nếu bạn chắc chăn muốn xóa   █");
-                        System.out.println("█    2. Nhập N để hủy                       █");
-                        System.out.println("█                                           █");
-                        System.out.println("█████████████████████████████████████████████");
-                        System.out.print("➥ ");
-                        String option = input.nextLine();
-                        switch (option) {
-                            case "y":
-                                productsManagers.remove(productsManager);
-                                count++;
-                                CSVUtils.write(PATH, productsManagers);
-                                showProducts();
-                                return;
-                            case "n":
-                                return;
-                            default:
-                                System.out.println("Nhập vào không hợp lệ! vui lòng nhập lại.");
-                                removeProduct();
-                                break;
-                        }
-                    }
-                    if (count == 0) {
-                        System.out.println("ID không tồn tại! Bạn có muốn tiếp tục không?");
-                        removeProduct();
-                        break;
-                    }
-                }
-        }
-
-    }
 
     public void sortByPriceOrderByASC() {
         showProductsSort(InputOption.SHOW, productService.findAllOrderByPriceASC());
@@ -267,9 +286,4 @@ public class ProductsView {
         showProductsSort(InputOption.SHOW, productService.findAllOrderByPriceDESC());
     }
 
-
-    public static void main(String[] args) {
-        ProductsView productsView = new ProductsView();
-        productsView.removeProduct();
-    }
 }

@@ -1,5 +1,6 @@
 package cg.hdk.slshop.service;
 
+import cg.hdk.slshop.model.Role;
 import cg.hdk.slshop.model.User;
 
 import java.util.List;

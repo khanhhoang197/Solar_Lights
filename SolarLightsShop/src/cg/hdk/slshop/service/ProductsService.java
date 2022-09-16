@@ -117,7 +117,7 @@ public class ProductsService extends ProductsManager implements IProductService 
     }
     @Override
     public List<ProductsManager> findAllOrderByPriceASC() {
-        List<ProductsManager> products = new ArrayList<>(findAllProducts());
+        List<ProductsManager> products = findAllProducts();
         products.sort(new Comparator<ProductsManager>() {
             @Override
             public int compare(ProductsManager o1, ProductsManager o2) {
@@ -132,7 +132,7 @@ public class ProductsService extends ProductsManager implements IProductService 
 
     @Override
     public List<ProductsManager> findAllOrderByPriceDESC() {
-        List<ProductsManager> products = new ArrayList<>(findAllProducts());
+        List<ProductsManager> products = findAllProducts();
         products.sort(new Comparator<ProductsManager>() {
             @Override
             public int compare(ProductsManager o1, ProductsManager o2) {

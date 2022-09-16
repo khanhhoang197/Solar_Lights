@@ -30,6 +30,17 @@ public class User {
         this.role = role;
     }
 
+    public User(long idUser, String fullName, String phoneNumber, String address, String email, Role role, Instant timeCreate, Instant timeUpdate) {
+        this.idUser = idUser;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.email = email;
+        this.role = role;
+        this.timeCreate = timeCreate;
+        this.timeUpdate = timeUpdate;
+    }
+
     public static User parseUser(String rawUser) {
         User user = new User();
         String[] array = rawUser.split(",");

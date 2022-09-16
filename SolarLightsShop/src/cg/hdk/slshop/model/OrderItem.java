@@ -1,11 +1,14 @@
 package cg.hdk.slshop.model;
 
+import java.time.Instant;
+
 public class OrderItem {
     private Long id;
     private String name;
     private double price;
     private int quantity;
     private double total;
+    private Instant timeCreate;
 
     public OrderItem(){
 
@@ -17,6 +20,15 @@ public class OrderItem {
         this.price = price;
         this.quantity = quantity;
         this.total = total;
+    }
+
+    public OrderItem(Long id, String name, double price, int quantity, double total, Instant timeCreate) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.total = total;
+        this.timeCreate = timeCreate;
     }
 
     public Long getId() {
@@ -58,6 +70,15 @@ public class OrderItem {
     public void setTotal(double total) {
         this.total = total;
     }
+
+    public Instant getTimeCreate() {
+        return timeCreate;
+    }
+
+    public void setTimeCreate(Instant timeCreate) {
+        this.timeCreate = timeCreate;
+    }
+
     public static OrderItem parserOderItem(String raw){
         OrderItem orderItem = new OrderItem();
         String[] fields = raw.split(",");

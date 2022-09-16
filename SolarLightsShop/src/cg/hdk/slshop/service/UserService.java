@@ -10,6 +10,7 @@ import java.util.List;
 
 public class UserService implements IUserService {
     public static final String PATH = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\users.csv";
+    public static final String PATH_ADMIN = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\admin.csv";
     private static UserService instance;
 
     public UserService() {
@@ -23,7 +24,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> findAll() {
+    public  List<User> findAll() {
         List<User> users = new ArrayList<>();
         List<String> records = CSVUtils.read(PATH);
         for (String record : records) {
@@ -38,10 +39,10 @@ public class UserService implements IUserService {
 
         for (User user : users) {
             if (user.getUsername().equals(username)
-                    && user.getPassword().equals(password))
+                    && user.getPassword().equals(password) && user.getRole() == Role.ADMIN)
 
-                 return user;
-            }
+                return user;
+        }
         return null;
     }
 
@@ -51,7 +52,8 @@ public class UserService implements IUserService {
         for (User user : users) {
 
 
-            if (user.getUsername().equals(username) && user.getPassword().equals(password) && user.getRole().equals(Role.USER)) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)
+                    && user.getRole().equals(Role.USER)) {
                 return user;
             }
         }
@@ -64,7 +66,10 @@ public class UserService implements IUserService {
         List<User> users = findAll();
         newUser.setTimeCreate(Instant.now());
         users.add(newUser);
-        CSVUtils.write(PATH, users);
+        if (Role.parseRole("USER") == Role.USER)
+            CSVUtils.write(PATH, users);
+        if (Role.parseRole("ADMIN") == Role.ADMIN)
+            CSVUtils.write(PATH_ADMIN, users);
     }
 
     @Override
@@ -72,20 +77,13 @@ public class UserService implements IUserService {
         List<User> users = findAll();
         for (User user : users) {
             if (user.getIdUser() == newUser.getIdUser()) {
-                String fullName = newUser.getFullName();
-                if (fullName != null && !fullName.isEmpty())
-                    user.setFullName(fullName);
-                String phone = newUser.getPhoneNumber();
-                if (phone != null && !phone.isEmpty())
-                    user.setPhoneNumber(newUser.getPhoneNumber());
-                String address = newUser.getAddress();
-                if (address != null && !address.isEmpty())
-                    user.setAddress(newUser.getAddress());
+                user.setFullName(newUser.getFullName());
+                user.setPhoneNumber(newUser.getPhoneNumber());
+                user.setAddress(newUser.getAddress());
                 user.setTimeUpdate(Instant.now());
                 CSVUtils.write(PATH, users);
                 break;
             }
-
         }
     }
 

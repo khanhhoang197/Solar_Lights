@@ -9,7 +9,12 @@ public class Order {
     private String address;
     private Instant timeCreate;
 
-    public Order(){}
+    public Order(Long idOrder, String fullName, String mobile, String address){
+        this.idOrder = idOrder;
+        this.fullName = fullName;
+        this.mobile = mobile;
+        this.address = address;
+    }
     public Order(Long idOrder, String fullName, String mobile, String address, Instant timeCreate) {
         this.idOrder = idOrder;
         this.fullName = fullName;
@@ -17,6 +22,10 @@ public class Order {
         this.address = address;
         this.timeCreate = timeCreate;
     }
+
+    public Order() {
+    }
+
     public static Order parseOder(String raw){
         Order order = new Order();
         String [] fields = raw.split(",");
@@ -24,7 +33,7 @@ public class Order {
         order.fullName = fields[1];
         order.mobile = fields[2];
         order.address = fields[3];
-        order.timeCreate = Instant.now();
+        order.timeCreate = Instant.parse(fields[4]);
         return order;
     }
     public Long getIdOrder() {
