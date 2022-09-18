@@ -60,7 +60,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void add(User newUser) {
+    public void addUser(User newUser) {
         List<User> users = findAll();
         newUser.setTimeCreate(Instant.now());
         users.add(newUser);
@@ -83,7 +83,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean existsByUsername(String userName) {
+    public boolean existsByUserName(String userName) {
         List<User> users = findAll();
         if (!users.isEmpty()) {
             for (User user : users) {

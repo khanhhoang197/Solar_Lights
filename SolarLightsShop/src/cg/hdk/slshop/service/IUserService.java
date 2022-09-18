@@ -9,10 +9,10 @@ public interface IUserService {
     List<User> findAll();
     User adminLogin(String username, String password);
     User memberLogin(String username, String password);
-    void add(User newUser);
+    void addUser(User newUser);
     boolean existsUserId(Long id);
     boolean existsByEmail(String email);
-    boolean existsByUsername(String userName);
+    boolean existsByUserName(String userName);
     User findById(Long id);
 
 }

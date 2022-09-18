@@ -388,9 +388,4 @@ public class OrderItemView {
                 break;
         }
     }
-
-    public static void main(String[] args) {
-        OrderItemView orderItemView = new OrderItemView();
-        orderItemView.addOrderItem();
-    }
 }

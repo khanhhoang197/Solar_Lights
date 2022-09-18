@@ -4,13 +4,13 @@ import cg.hdk.slshop.model.Role;
 import cg.hdk.slshop.service.IUserService;
 import cg.hdk.slshop.service.UserService;
 import cg.hdk.slshop.utils.AppUtils;
-import cg.hdk.slshop.utils.InputOption;
 
 import java.util.Scanner;
 
 public class AdminView {
     private static final Scanner scanner = new Scanner(System.in);
     private static final IUserService userService = UserService.getInstance();
+    static UserView userView = new UserView();
 
     public static void loginUser(Role role) {
         int choice;
@@ -36,7 +36,7 @@ public class AdminView {
                         }
                         break;
                     case 2:
-                        UserView.createAddUser();
+                        userView.createAddUser();
                         System.out.println("Chọn 1 để đăng nhập, 2 để thoát.");
                         String option = scanner.next();
                         switch (option) {
@@ -220,7 +220,7 @@ public class AdminView {
                         UserView.showUsers();
                         break;
                     case 2:
-                        UserView.addUser();
+                        userView.addUser();
                         break;
                     case 3:
                         UserView.showUsers();

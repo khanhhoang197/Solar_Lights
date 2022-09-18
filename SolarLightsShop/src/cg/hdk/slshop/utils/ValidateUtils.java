@@ -12,7 +12,7 @@ public class ValidateUtils {
     public static boolean isPasswordValid(String password) {
         return Pattern.compile(PASSWORD_PATTERN).matcher(password).matches();
     }
-    public static boolean isUsernameValid(String userName) {
+    public static boolean isUserNameValid(String userName) {
         return Pattern.compile(USERNAME_PATTERN).matcher(userName).matches();
     }
     public static boolean isAddressValid(String address){

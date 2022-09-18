@@ -66,46 +66,18 @@ public class UserView {
         );
     }
 
-    public static long inputId(InputOption option) {
-        long id;
-        switch (option) {
-            case UPDATE:
-            case DELETE:
-                System.out.print("Nhập id người dùng cần xóa: ");
-                break;
-        }
-        System.out.print("➥ ");
-        boolean flagInputId = true;
-        do {
-            id = AppUtils.retryParseLong();
-            boolean exits = userService.existsUserId(id);
-            switch (option) {
-                case UPDATE:
-                case DELETE:
-                    if (!exits) {
-                        System.out.println("Id không tồn tại, vui lòng nhập lại! ");
-                        System.out.print("➥ ");
-                    }
-                    flagInputId = !exits;
-                    break;
-            }
-        }
-        while (flagInputId);
-        return id;
-    }
-
-    public static void createAddUser() {
+    public void createAddUser() {
         do {
             try {
                 long id = System.currentTimeMillis() / 1000;
-                String username = inputUsername();
+                String username = inputUserName();
                 String password = inputPassword();
                 String fullName = inputFullName(InputOption.ADD);
                 String phone = inputPhone(InputOption.ADD);
                 String address = inputAddress(InputOption.ADD);
                 String email = inputEmail();
                 User user = new User(id, username.trim(), password, fullName.trim(), phone.trim(), address.trim(), email.trim(), Role.USER);
-                userService.add(user);
+                userService.addUser(user);
                 System.out.println("Tạo tài khoản thành công!");
                 AdminView.loginUser(Role.USER);
             } catch (Exception e) {
@@ -115,25 +87,26 @@ public class UserView {
         } while (AppUtils.isRetry(InputOption.ADD));
     }
 
-    public static void addUser() {
+    public void addUser() {
         do {
             try {
                 long id = System.currentTimeMillis() / 1000;
-                String username = inputUsername();
+                String username = inputUserName();
                 String password = inputPassword();
                 String fullName = inputFullName(InputOption.ADD);
                 String phone = inputPhone(InputOption.ADD);
                 String address = inputAddress(InputOption.ADD);
                 String email = inputEmail();
-                User user = new User(id, username.trim(), password, fullName.trim(), phone.trim(), address.trim(), email.trim(), Role.USER);
+                User user = new User(id, username, password, fullName, phone, email, address, Role.USER);
                 setRole(user);
-                userService.add(user);
-                System.out.println("Tạo tài khoản thành công!");
+                userService.addUser(user);
+                System.out.println("Đã thêm người dùng thành công!");
             } catch (Exception e) {
-                System.out.println("Sai định dạng, vui lòng nhập lại!");
+                System.out.println("Nhập sai. Vui lòng nhập lại!111");
             }
         } while (AppUtils.isRetry(InputOption.ADD));
     }
+
 
     public static void setRole(User user) {
         System.out.println("╔════════════════════════════════╗");
@@ -159,20 +132,19 @@ public class UserView {
         }
     }
 
-    public static String inputUsername() {
-        System.out.println("(Username không có ký tự đặc biệt)");
-        System.out.print("Username: ");
+    public String inputUserName() {
+        System.out.println("Nhập Username (không bao gồm dấu cách, kí tự đặc biệt)");
+        System.out.print("⭆");
         String username;
         do {
-            if (!ValidateUtils.isUsernameValid(username = AppUtils.retryString("username"))) {
-                System.out.println(" Username " + username + " không đúng đinh dạng, vui lòng nhập lại!");
-                System.out.print("Username: ");
+            if (!ValidateUtils.isUserNameValid(username = AppUtils.retryString("Username"))) {
+                System.out.println(username + " của bạn không đúng định dạng. Vui lòng kiểm tra và nhập lại!");
+                System.out.print("⭆ ");
                 continue;
-
-            } else if (userService.existsByUsername(username)) {
-                System.out.println("Username đã tồn tại! Vui lòng chọn Username khác!");
-                System.out.print("Username: ");
-                UserView.createAddUser();
+            }
+            if (userService.existsByUserName(username)) {
+                System.out.println("Username này đã tồn tại. Vui lòng nhập lại!");
+                System.out.print("⭆ ");
                 continue;
             }
             break;
@@ -330,10 +302,5 @@ public class UserView {
                 e.getStackTrace();
             }
         } while (!isTrue);
-    }
-
-    public static void main(String[] args) {
-        createAddUser();
-
     }
 }

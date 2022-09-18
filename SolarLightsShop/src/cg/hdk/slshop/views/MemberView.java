@@ -247,8 +247,4 @@ public class MemberView {
                 break;
         }
     }
-
-    public static void main(String[] args) {
-        menuMember();
-    }
 }

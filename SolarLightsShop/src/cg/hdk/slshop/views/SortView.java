@@ -194,8 +194,4 @@ public class SortView {
             choice = AppUtils.retryParseInt();
         } while (choice != 0);
     }
-
-    public static void main(String[] args) {
-        menuSort();
-    }
 }
