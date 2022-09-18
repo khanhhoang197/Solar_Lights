@@ -6,6 +6,7 @@ import cg.hdk.slshop.service.UserService;
 import cg.hdk.slshop.utils.AppUtils;
 import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InputOption;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Scanner;
@@ -19,9 +20,6 @@ public class MemberView {
     static OrderItemView orderItemView = new OrderItemView();
     static ProductsView productsView = new ProductsView();
 
-    public static void main(String[] args) {
-        menuMember();
-    }
     public static void menuMember() {
         do {
             try {
@@ -44,36 +42,17 @@ public class MemberView {
                         break;
                     case 2:
                         productsView.findProductsName();
-                        do {
-                            System.out.println("╔══════════════════════════════════════╗");
-                            System.out.println("║            1. Mua ngay               ║");
-                            System.out.println("║            0. Quay lại               ║");
-                            System.out.println("╚══════════════════════════════════════╝");
-                            System.out.print("➥ ");
-                            String option = scanner.nextLine();
-                            switch (option){
-                                case "1":
-                                    orderView.addOrder();
-                                    orderItemView.addOrderItem();
-                                    OrderView.showOrder();
-                                    OrderItemView.renderTotal();
-                                    break;
-                                case "0":
-                                    menuMember();
-                                    break;
-                                default:
-                                    System.out.println("Nhập không hợp lệ!");
-                                    System.out.println("Vui lòng nhập lại!");
-                                    break;
-                            }
-                        }while (true);
+                        System.out.println("╔══════════════════════════════════════╗");
+                        System.out.println("║            1. Mua ngay               ║");
+                        System.out.println("║            2. Sắp xếp                ║");
+                        System.out.println("║            0. Quay lại               ║");
+                        System.out.println("╚══════════════════════════════════════╝");
+                        System.out.print("➥ ");
+                        String option = scanner.nextLine();
+                        Buy(option);
                     case 3:
                         productsView.showProducts();
-                        System.out.println("╔══════════════════════════════════════╗");
-                        System.out.println("║            1. Tìm sản phẩm           ║");
-                        System.out.println("║            2. Sắp xếp theo giá       ║");
-                        System.out.println("║            3. Quay lại               ║");
-                        System.out.println("╚══════════════════════════════════════╝");
+                        menuOption();
                         break;
                     case 4:
                         orderView.addOrder();
@@ -143,6 +122,7 @@ public class MemberView {
                     }
                 }
             }
+            System.out.println("Username hoặc Password không đúng!");
         } catch (Exception e) {
             System.out.println("Nhập sai rồi, vui lòng nhập lại!");
         }
@@ -213,5 +193,62 @@ public class MemberView {
         System.out.println("╚═══════════════════════════════════════════════╝");
         System.out.println("Chọn chức năng: ");
         System.out.print("➥ ");
+    }
+
+    public static void menuOption() {
+        try {
+            System.out.println("╔══════════════════════════════════════╗");
+            System.out.println("║            1. Tìm sản phẩm           ║");
+            System.out.println("║            2. Sắp xếp                ║");
+            System.out.println("║            3. Quay lại               ║");
+            System.out.println("╚══════════════════════════════════════╝");
+            System.out.println("chọn chức năng:");
+            System.out.print("➥ ");
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1":
+                    productsView.findProductsName();
+                    System.out.println("╔══════════════════════════════════════╗");
+                    System.out.println("║            1. Mua ngay               ║");
+                    System.out.println("║            0. Quay lại               ║");
+                    System.out.println("╚══════════════════════════════════════╝");
+                    System.out.println("chọn chức năng:");
+                    System.out.print("➥ ");
+                    String option = scanner.nextLine();
+                    Buy(option);
+                    break;
+                case "2":
+                    SortView.menuSort();
+                    break;
+                case "3":
+                    menuMember();
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("nhập không hợp lệ!");
+            e.printStackTrace();
+        }
+    }
+
+    public static void Buy(String option) {
+        switch (option) {
+            case "1":
+                orderView.addOrder();
+                orderItemView.addOrderItem();
+                OrderView.showOrder();
+                OrderItemView.renderTotal();
+                break;
+            case "0":
+                menuMember();
+                break;
+            default:
+                System.out.println("Nhập không hợp lệ!");
+                System.out.println("Vui lòng nhập lại!");
+                break;
+        }
+    }
+
+    public static void main(String[] args) {
+        menuMember();
     }
 }

@@ -262,7 +262,8 @@ public class AdminView {
                 System.out.println("║       3. Sửa sản phẩm                         ║");
                 System.out.println("║       4. Xóa sản phẩm                         ║");
                 System.out.println("║       5. Tìm kiếm sản phẩm                    ║");
-                System.out.println("║       6. Quay lại                             ║");
+                System.out.println("║       6. Sắp xếp                              ║");
+                System.out.println("║       7. Quay lại                             ║");
                 System.out.println("║       0. Thoát                                ║");
                 System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
@@ -286,6 +287,8 @@ public class AdminView {
                         productsView.findProductsName();
                         break;
                     case 6:
+                        SortView.menuSortByAdmin();
+                    case 7:
                         renderMenuManager();
                         break;
                     case 0:
@@ -342,6 +345,5 @@ public class AdminView {
                 e.printStackTrace();
             }
         } while (true);
-
     }
 }

@@ -73,35 +73,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void update(User newUser) {
-        List<User> users = findAll();
-        for (User user : users) {
-            if (user.getIdUser() == newUser.getIdUser()) {
-                user.setFullName(newUser.getFullName());
-                user.setPhoneNumber(newUser.getPhoneNumber());
-                user.setAddress(newUser.getAddress());
-                user.setTimeUpdate(Instant.now());
-                CSVUtils.write(PATH, users);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void revome(Long id) {
-        List<User> users = findAll();
-        for (User user : users) {
-            if (user.getIdUser() == (id)) {
-                users.remove(user);
-                break;
-            } else {
-                System.out.println("Id không tồn tại");
-            }
-        }
-        CSVUtils.write(PATH, users);
-    }
-
-    @Override
     public boolean existsUserId(Long id) {
         return findById(id) != null;
     }
@@ -111,16 +82,6 @@ public class UserService implements IUserService {
         List<User> users = findAll();
         for (User user : users) {
             if (user.getEmail().equals(email))
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean existByPhone(String phone) {
-        List<User> users = findAll();
-        for (User user : users) {
-            if (user.getPhoneNumber().equals(phone))
                 return true;
         }
         return false;

@@ -8,15 +8,14 @@ import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InputOption;
 import cg.hdk.slshop.utils.InstantUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ProductsView {
 
     public final static String PATH = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv";
     static Scanner scanner = new Scanner(System.in);
     private final IProductService productService;
+    public List<ProductsManager> productsManager;
 
     public ProductsView() {
         this.productService = new ProductsService();
@@ -106,7 +105,6 @@ public class ProductsView {
 
     public void removeProduct() {
         showProducts();
-        AdminView adminView = new AdminView();
         int count = 0;
         System.out.println("Nhập y để tiếp tục hoặc nhập b để quay lại menu chính: ");
         String confirm = scanner.nextLine();
@@ -115,7 +113,7 @@ public class ProductsView {
                 checkRemoveProducts();
                 break;
             case "b":
-                adminView.productManagement();
+                AdminView.productManagement();
                 break;
             default:
                 System.out.println("chọn không họp lệ");
@@ -130,40 +128,41 @@ public class ProductsView {
 
     public void checkRemoveProducts() {
         List<ProductsManager> productsManagers = productService.findAllProducts();
-            try {
-                System.out.println("Nhập ID muốn xóa:  ");
-                Long id = Long.parseLong(scanner.nextLine());
-                for (ProductsManager productsManager : productsManagers) {
-                    Long tamp = productsManager.getIdProduct();
-                    if (tamp.equals(id)) {
-                        System.out.println("╔════════════════════════════════╗");
-                        System.out.println("║            ►  Xóa  ◄           ║");
-                        System.out.println("╠════════════════════════════════╣");
-                        System.out.println("║       1.     Đồng ý            ║");
-                        System.out.println("║       2.     Quay lại          ║");
-                        System.out.println("╚════════════════════════════════╝");
-                        System.out.print("➥ ");
-                        String option = scanner.nextLine();
-                        switch (option) {
-                            case "1":
-                                productsManagers.remove(productsManager);
-                                CSVUtils.write(PATH, productsManagers);
-                                System.out.println("Xóa thành công!");
-                                removeProduct();
-                                return;
-                            case "2":
-                                break;
-                            default:
-                                System.out.println("Nhập vào không hợp lệ! vui lòng nhập lại.");
-                                removeProduct();
-                                break;
+        try {
+            System.out.println("Nhập ID muốn xóa:  ");
+            Long id = Long.parseLong(scanner.nextLine());
+            for (ProductsManager productsManager : productsManagers) {
+                Long tamp = productsManager.getIdProduct();
+                if (tamp.equals(id)) {
+                    System.out.println("╔════════════════════════════════╗");
+                    System.out.println("║            ►  Xóa  ◄           ║");
+                    System.out.println("╠════════════════════════════════╣");
+                    System.out.println("║       1.     Đồng ý            ║");
+                    System.out.println("║       2.     Quay lại          ║");
+                    System.out.println("╚════════════════════════════════╝");
+                    System.out.print("➥ ");
+                    String option = scanner.nextLine();
+                    switch (option) {
+                        case "1":
+                            productsManagers.remove(productsManager);
+                            CSVUtils.write(PATH, productsManagers);
+                            System.out.println("Xóa thành công!");
+                            removeProduct();
+                            return;
+                        case "2":
+                            break;
+                        default:
+                            System.out.println("Nhập vào không hợp lệ! vui lòng nhập lại.");
+                            removeProduct();
+                            break;
+                    }
+                }
             }
-                }}
-            }catch (Exception e){
-                System.out.println("Nhập không hợp lệ.");
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            System.out.println("Nhập không hợp lệ.");
+            e.printStackTrace();
         }
+    }
 
 
     public void findProductsName() {
@@ -187,40 +186,6 @@ public class ProductsView {
         if (count == 0) {
             System.out.println("Sản phẩm hiện tại đang hết hàng!!");
         }
-    }
-    private long inputId(InputOption option) {
-        Long id;
-        switch (option) {
-            case ADD:
-                System.out.println("Nhập id");
-                break;
-            case UPDATE:
-                System.out.println("Nhập id muốn thay đổi");
-                break;
-            case DELETE:
-                System.out.println("Nhap id muon xoa");
-                break;
-        }
-        boolean isRetry = false;
-        do {
-            id = AppUtils.retryParseLong();
-            boolean exist = productService.exitsById(id);
-            switch (option) {
-                case ADD:
-                    if (exist) {
-                        System.out.println("Id đã tồn tại! Vui lòng nhập lại");
-                    }
-                    isRetry = exist;
-                    break;
-                case UPDATE:
-                    if (!exist) {
-                        System.out.println("Không tìm thấy id! Vui lòng nhập lại");
-                    }
-                    isRetry = !exist;
-                    break;
-            }
-        } while (isRetry);
-        return id;
     }
 
     private String inputName(InputOption option) {
