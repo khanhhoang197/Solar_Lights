@@ -9,6 +9,7 @@ import cg.hdk.slshop.utils.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,9 +25,18 @@ public class UserView {
     static final String PATH_USER = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\users.csv";
     private static final Scanner scanner = new Scanner(System.in);
 
+    public static List<User> findAll() {
+        List<User> users = new ArrayList<>();
+        List<String> lines = CSVUtils.read(PATH_USER);
+        for (String line : lines) {
+            users.add(User.parseUser(line));
+        }
+        return users;
+    }
+
     public static void showUsers() {
         System.out.println("────────────────────────────────────────────────────────────────────────────────────────────────────────────── DANH SÁCH KHÁCH HÀNG ──────────────────────────────────────────────────────────────────────────────────────────────");
-        System.out.printf("\t%-18s %-22s %-20s %-26s %-33s %-27s %-20s %-25s %-25s \n", "Id", "Username", "Họ và tên", "Số điện thoại", "Địa chỉ","Email",  "Quyền", "Ngày tạo", "Ngày cập nhật");
+        System.out.printf("\t%-18s %-22s %-20s %-26s %-33s %-27s %-20s %-25s %-25s \n", "Id", "Username", "Họ và tên", "Số điện thoại", "Địa chỉ", "Email", "Quyền", "Ngày tạo", "Ngày cập nhật");
         System.out.println("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
         BufferedReader br = null;
         try {
@@ -50,11 +60,11 @@ public class UserView {
 
     public static void printMenu(List<String> userList) {
         System.out.printf(" %-13s |  %-19s |   %-20s |   %-14s   |  %-25s  |    %-30s  | %10s | %30s |\n",
-                  userList.get(0),userList.get(1), userList.get(3),
-                userList.get(4),userList.get(5),userList.get(6),userList.get(7),userList.get(8)
+                userList.get(0), userList.get(1), userList.get(3),
+                userList.get(4), userList.get(5), userList.get(6), userList.get(7), userList.get(8)
 
-            );
-        }
+        );
+    }
 
     public static long inputId(InputOption option) {
         long id;
@@ -99,7 +109,8 @@ public class UserView {
                 System.out.println("Tạo tài khoản thành công!");
                 AdminView.loginUser(Role.USER);
             } catch (Exception e) {
-                System.out.println("Sai định dạng, vui lòng nhập lại!");
+                System.out.println("Sai định dạng.");
+                e.printStackTrace();
             }
         } while (AppUtils.isRetry(InputOption.ADD));
     }
@@ -154,13 +165,14 @@ public class UserView {
         String username;
         do {
             if (!ValidateUtils.isUsernameValid(username = AppUtils.retryString("username"))) {
-                System.out.println(" Username" + username + " không đúng đinh dạng, vui lòng nhập lại!");
+                System.out.println(" Username " + username + " không đúng đinh dạng, vui lòng nhập lại!");
                 System.out.print("Username: ");
                 continue;
-            }
-            if (userService.existsByUsername(username)) {
+
+            } else if (userService.existsByUsername(username)) {
                 System.out.println("Username đã tồn tại! Vui lòng chọn Username khác!");
                 System.out.print("Username: ");
+                UserView.createAddUser();
                 continue;
             }
             break;
@@ -321,6 +333,7 @@ public class UserView {
     }
 
     public static void main(String[] args) {
-        showUsers();
+        createAddUser();
+
     }
 }

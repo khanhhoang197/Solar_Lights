@@ -132,12 +132,12 @@ public class AdminView {
     private static boolean isRetry() {
         do {
             try {
-                System.out.println("\t ████████████████████ CHON ██████████████████████");
-                System.out.println("\t █                                              █");
-                System.out.println("\t █           1. Đăng nhập lại                   █");
-                System.out.println("\t █           2. Thoát chương trình              █");
-                System.out.println("\t █                                              █");
-                System.out.println("\t ████████████████████████████████████████████████");
+                System.out.println("╔══════════════   CHỌN   ════════════════╗");
+                System.out.println("╠════════════════════════════════════════╣");
+                System.out.println("║             1. Đăng nhập lại           ║");
+                System.out.println("║             2. Thoát                   ║");
+                System.out.println("║                                        ║");
+                System.out.println("╚════════════════════════════════════════╝");
                 System.out.print("➥ ");
                 int option = Integer.parseInt(scanner.nextLine());
                 switch (option) {

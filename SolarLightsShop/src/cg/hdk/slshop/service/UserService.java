@@ -10,7 +10,6 @@ import java.util.List;
 
 public class UserService implements IUserService {
     public static final String PATH = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\users.csv";
-    public static final String PATH_ADMIN = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\admin.csv";
     private static UserService instance;
 
     public UserService() {
@@ -60,16 +59,12 @@ public class UserService implements IUserService {
         return null;
     }
 
-
     @Override
     public void add(User newUser) {
         List<User> users = findAll();
         newUser.setTimeCreate(Instant.now());
         users.add(newUser);
-        if (Role.parseRole("USER") == Role.USER)
             CSVUtils.write(PATH, users);
-        if (Role.parseRole("ADMIN") == Role.ADMIN)
-            CSVUtils.write(PATH_ADMIN, users);
     }
 
     @Override
@@ -90,13 +85,13 @@ public class UserService implements IUserService {
     @Override
     public boolean existsByUsername(String userName) {
         List<User> users = findAll();
-        for (User user : users) {
-            if (user.getUsername().equals(userName))
-                return true;
-        }
-        return false;
+        if (!users.isEmpty()) {
+            for (User user : users) {
+                if ((user.getUsername()).equals(userName))
+                    return true;
+            }
+        }return false;
     }
-
     @Override
     public User findById(Long id) {
         List<User> users = findAll();

@@ -40,11 +40,10 @@ public class AppUtils {
     public static String retryString(String fieldName) {
         String result = scanner.nextLine();
         System.out.print("➥ ");
-        while (result.isEmpty()) {
+        while (result.trim().isEmpty()) {
             System.out.printf("%s không được để trống! \n", fieldName);
             System.out.print("➥ ");
             break;
-
         }
         return result;
     }
