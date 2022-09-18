@@ -5,6 +5,7 @@ import cg.hdk.slshop.model.OrderItem;
 import cg.hdk.slshop.model.ProductsManager;
 import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InstantUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,10 +15,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderItemView {
-    private final String PATH_ORDERITEM = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\OrderItem.csv";
+    public static final String PATH_ORDERITEM = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\OrderItem.csv";
     public final static String PATH_ORDER_HISTORY = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\salesHistory.csv";
     public final static String PATH_PRODUCT = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\products.csv";
-    Scanner scanner = new Scanner(System.in);
+    static Scanner scanner = new Scanner(System.in);
     OrderView orderView = new OrderView();
     List<OrderItem> orderItems;
 
@@ -25,7 +26,7 @@ public class OrderItemView {
         this.orderItems = new ArrayList<>();
     }
 
-    public List<OrderItem> findAll() {
+    public static List<OrderItem> findAll() {
         List<OrderItem> orderItems = new ArrayList<>();
         List<String> lines = CSVUtils.read(PATH_ORDERITEM);
         for (String line : lines) {
@@ -34,7 +35,7 @@ public class OrderItemView {
         return orderItems;
     }
 
-    public List<ProductsManager> findAllProducts() {
+    public static List<ProductsManager> findAllProducts() {
         List<ProductsManager> products = new ArrayList<>();
         List<String> records = CSVUtils.read(PATH_PRODUCT);
         for (String record : records) {
@@ -95,97 +96,9 @@ public class OrderItemView {
         doubleSource(orderItems, id, price, total, name, quantity);
         showOrderItem();
         selectOderItem();
-        String choice = scanner.nextLine();
-        switch (choice) {
-            case "1":
-                while (true) {
-                    choice = scanner.nextLine();
-                    switch (choice) {
-                        case "1":
-                            updateOrderItem();
-                            selectOderItem();
-                            break;
-                        case "2":
-                            editOrderItem();
-                            selectOderItem();
-                            break;
-                        case "3":
-                            showOrderItem();
-                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-                            System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
-                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
-                            deleteOrderItem();
-                            selectOderItem();
-                            break;
-                        case "4":
-                            orderView.showOrder();
-                            showOrderItem();
-                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-                            System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
-                            System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
-
-                            MemberView.menuMember();
-                            break;
-                        default:
-                            System.out.println("Không hợp lệ, vui lòng nhập lại.");
-                            updateOrderItem();
-                            break;
-                    }
-                }
-            case "2":
-                break;
-            default:
-                System.out.println("Không hợp lệ, vui lòng nhập lại.");
-                selectOderItem();
-                break;
-        }
     }
 
-    public static void showOrderItem() {
-        System.out.printf("\n    |       %-10s |            %-30s |       %-15s |    %-10s |     %-23s|\n", "ID Product", "Tên Vật Phẩm", "Giá Tiền", "Số lượng", "Thành Tiền");
-        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-        BufferedReader br = null;
-        try {
-            String line;
-            br = new BufferedReader(new FileReader(PATH_ORDER_HISTORY));
-            while ((line = br.readLine()) != null) {
-                printMenuOrderItem(parseCsvLine(line));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null)
-                    br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void printMenuOrderItem(List<String> OrderItem) {
-
-        System.out.printf("    |       %-8s |    %-36s   |       %-15s |       %-8s |     %-19s   |\n",
-                OrderItem.get(0), OrderItem.get(1), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(2))), OrderItem.get(3), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(4))));
-
-    }
-
-    public static List<String> parseCsvLine(String csvLine) {
-        return getStrings(csvLine);
-    }
-
-    static List<String> getStrings(String csvLine) {
-        List<String> result = new ArrayList<>();
-        if (csvLine != null) {
-            String[] splitData = csvLine.split(",");
-            for (int i = 0; i < splitData.length; i++) {
-                result.add(splitData[i]);
-            }
-        }
-        return result;
-    }
-
-    public void updateOrderItem() {
+    public static void updateOrderItem() {
         List<OrderItem> orderItems = findAll();
         List<ProductsManager> productsManagers = findAllProducts();
         ProductsView render = new ProductsView();
@@ -196,6 +109,41 @@ public class OrderItemView {
         double total = 0;
         String name = "";
         int count = 0;
+        for (OrderItem orderItem : orderItems) {
+            Long tampSame = orderItem.getId();
+            if (tampSame.equals(id)) {
+                price = orderItem.getPrice();
+                name = orderItem.getName();
+                count++;
+                int quantityUpdate = CSVUtils.inputQuantity();
+                int countQuantity = 0;
+                if (orderItem.getId().equals(id))
+                    orderItem.setQuantity(orderItem.getQuantity() + quantityUpdate);
+                total = orderItem.getPrice() * orderItem.getQuantity();
+                for (ProductsManager product : productsManagers) {
+                    int tampQuantity = product.getQuantity();
+                    Long tempId = product.getIdProduct();
+                    if (tempId.equals(id) && tampQuantity >= quantityUpdate) {
+                        product.setQuantity(product.getQuantity() - quantityUpdate);
+                        CSVUtils.write(PATH_PRODUCT, productsManagers);
+                        countQuantity++;
+                    }
+                }
+                if (countQuantity == 0) {
+                    System.out.println("Số lượng không đủ vui lòng nhập lại!!");
+                    updateOrderItem();
+                    return;
+                }
+                orderItem.setQuantity(orderItem.getQuantity());
+                orderItem.setName(name);
+                orderItem.setPrice(price);
+                orderItem.setTotal(total);
+                CSVUtils.write(PATH_ORDERITEM, orderItems);
+                showOrderItem();
+                System.out.println("Order thành công!");
+                return;
+            }
+        }
         for (ProductsManager product : productsManagers) {
             Long temp = product.getIdProduct();
             if (temp.equals(id)) {
@@ -226,6 +174,7 @@ public class OrderItemView {
                     countQuantity++;
                 }
             }
+
             if (countQuantity <= 0) {
                 System.out.println("Số lượng không hợp lệ! Vui lòng nhập lại!!");
                 updateOrderItem();
@@ -234,29 +183,7 @@ public class OrderItemView {
         }
         doubleSource(orderItems, id, price, total, name, quantity);
     }
-
-    private void doubleSource(List<OrderItem> orderItems, Long id, double price, double total, String name, int quantity) {
-        OrderItem orderItem = new OrderItem(id,name,price,quantity,total);
-        orderItems.add(orderItem);
-        Instant timeCreate = Instant.now();
-        List<OrderHistory> orderHistories = OrderHistoryView.findAllOrderHistory();
-        OrderHistory orderHistory = new OrderHistory(id,name,price,quantity,total,timeCreate);
-        orderHistories.add(orderHistory);
-        CSVUtils.write(PATH_ORDER_HISTORY, orderHistories);
-        CSVUtils.write(PATH_ORDERITEM, orderItems);
-        System.out.println("Order thành công!");
-    }
-
-    public Double totalPrice(){
-        List<OrderItem> orderItemList = findAll();
-        double totalPrice = 0;
-        for (OrderItem orderItem: orderItemList) {
-            totalPrice += orderItem.getTotal();
-        }
-        return totalPrice;
-    }
-
-    public void editOrderItem(){
+    public static void editOrderItem() {
         List<OrderItem> orderItems = findAll();
         List<ProductsManager> productsManagers = findAllProducts();
         ProductsView render = new ProductsView();
@@ -267,8 +194,8 @@ public class OrderItemView {
         for (OrderItem orderItem : orderItems) {
             Long tamp = orderItem.getId();
             String name = "";
-            double price =  0;
-            double total =  0;
+            double price = 0;
+            double total = 0;
             long idEdit = 0;
             int quantity = 0;
             if (tamp.equals(id)) {
@@ -304,15 +231,12 @@ public class OrderItemView {
             editOrderItem();
         }
     }
-    public void deleteOrderItem() {
-        OrderItemView orderItemView =new OrderItemView();
+
+    public static void deleteOrderItem() {
         List<ProductsManager> products = findAllProducts();
         Scanner input = new Scanner(System.in);
         List<OrderItem> orderItemList = findAll();
         showOrderItem();
-        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-        System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(orderItemView.totalPrice()));
-        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
         System.out.println("\nNhập ID của sản phẩm muốn xóa. ");
         System.out.print("➥ ");
         Long id = Long.parseLong(input.nextLine());
@@ -322,26 +246,24 @@ public class OrderItemView {
             if (tamp.equals(id)) {
                 count++;
                 System.out.println("----------------------------------------------------------");
-                System.out.printf("|        Bạn có chắc chắn muốn xóa '%s' ?      |\n",orderItem.getName());
+                System.out.printf("|        Bạn có chắc chắn muốn xóa '%s' ?      |\n", orderItem.getName());
                 System.out.println("----------------------------------------------------------");
                 System.out.println("Nhấn Y để xóa hoặc N để quay lại!");
                 System.out.print("➥ ");
                 String choice = input.nextLine();
                 switch (choice) {
                     case "y":
-                        for (ProductsManager product : products){
+                        for (ProductsManager product : products) {
                             Long temp = product.getIdProduct();
-                            if (temp.equals(id)){
+                            if (temp.equals(id)) {
                                 product.setQuantity(product.getQuantity() + orderItem.getQuantity());
-                                CSVUtils.write(PATH_PRODUCT,products);
+                                CSVUtils.write(PATH_PRODUCT, products);
                             }
                         }
                         orderItemList.remove(orderItem);
                         CSVUtils.write(PATH_ORDERITEM, orderItemList);
                         showOrderItem();
-                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-                        System.out.printf("    |                                                                                    Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(totalPrice()));
-                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+                        selectOderItem();
                         updateOrderItem();
                         break;
                     case "N":
@@ -356,7 +278,78 @@ public class OrderItemView {
             deleteOrderItem();
         }
     }
-    public void selectOderItem(){
+
+    private static void doubleSource(List<OrderItem> orderItems, Long id, double price, double total, String name, int quantity) {
+        OrderItem orderItem = new OrderItem(id, name, price, quantity, total);
+        orderItems.add(orderItem);
+        Instant timeCreate = Instant.now();
+        List<OrderHistory> orderHistories = OrderHistoryView.findAllOrderHistory();
+        OrderHistory orderHistory = new OrderHistory(id, name, price, quantity, total, timeCreate);
+        orderHistories.add(orderHistory);
+        CSVUtils.write(PATH_ORDER_HISTORY, orderHistories);
+        CSVUtils.write(PATH_ORDERITEM, orderItems);
+        System.out.println("Order thành công!");
+    }
+
+    public static void showOrderItem() {
+        System.out.printf("\n    |       %-10s |            %-30s |       %-15s |    %-10s |     %-23s|\n", "ID ", "Tên Vật Phẩm", "Giá Tiền", "Số lượng", "Thành Tiền");
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+        BufferedReader br = null;
+        try {
+            String line;
+            br = new BufferedReader(new FileReader(PATH_ORDERITEM));
+            while ((line = br.readLine()) != null) {
+                printMenuOrderItem(parseCsvLine(line));
+            }
+            renderTotal();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null)
+                    br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void printMenuOrderItem(List<String> OrderItem) {
+        System.out.printf("    |       %-8s |    %-36s   |       %-15s |       %-8s |     %-19s   |\n",
+                OrderItem.get(0), OrderItem.get(1), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(2))), OrderItem.get(3), InstantUtils.doubleToVND(Double.parseDouble(OrderItem.get(4))));
+    }
+
+    public static List<String> parseCsvLine(String csvLine) {
+        return getStrings(csvLine);
+    }
+
+    static List<String> getStrings(String csvLine) {
+        List<String> result = new ArrayList<>();
+        if (csvLine != null) {
+            String[] splitData = csvLine.split(",");
+            for (int i = 0; i < splitData.length; i++) {
+                result.add(splitData[i]);
+            }
+        }
+        return result;
+    }
+
+    public static Double totalPrice() {
+        List<OrderItem> orderItemList = findAll();
+        double totalPrice = 0;
+        for (OrderItem orderItem : orderItemList) {
+            totalPrice += orderItem.getTotal();
+        }
+        return totalPrice;
+    }
+
+    public static void renderTotal() {
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
+        System.out.printf("    |                                                                                         Tổng tiền:          %s           |\n", InstantUtils.doubleToVND(totalPrice()));
+        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+    }
+
+    public static void selectOderItem() {
         System.out.println("☰☰☰☰☰☰☰☰☰   SELECT   ☰☰☰☰☰☰☰☰☰");
         System.out.println("☰                                   ☰");
         System.out.println("☰       1. Tiếp tục mua hàng        ☰");
@@ -366,10 +359,38 @@ public class OrderItemView {
         System.out.println("☰                                   ☰");
         System.out.println("☰☰☰☰☰☰☰☰☰☰☰☰☰.☰☰☰☰☰☰☰☰☰☰☰☰☰");
         System.out.print("➥ ");
+        String choice = scanner.nextLine();
+        switch (choice) {
+            case "1":
+                updateOrderItem();
+                showOrderItem();
+                totalPrice();
+                selectOderItem();
+                break;
+            case "2":
+                editOrderItem();
+                showOrderItem();
+                selectOderItem();
+                break;
+            case "3":
+                showOrderItem();
+                deleteOrderItem();
+                selectOderItem();
+                break;
+            case "4":
+                OrderView.showOrder();
+                showOrderItem();
+                MemberView.menuMember();
+                break;
+            default:
+                System.out.println("Không hợp lệ, vui lòng nhập lại.");
+                selectOderItem();
+                break;
+        }
     }
 
     public static void main(String[] args) {
-        OrderItemView orderItemView =new OrderItemView();
+        OrderItemView orderItemView = new OrderItemView();
         orderItemView.addOrderItem();
     }
 }

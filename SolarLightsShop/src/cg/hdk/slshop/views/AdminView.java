@@ -5,6 +5,7 @@ import cg.hdk.slshop.service.IUserService;
 import cg.hdk.slshop.service.UserService;
 import cg.hdk.slshop.utils.AppUtils;
 import cg.hdk.slshop.utils.InputOption;
+
 import java.util.Scanner;
 
 public class AdminView {
@@ -161,14 +162,14 @@ public class AdminView {
         int choice;
         do {
             try {
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓               1. Quản lý người dùng              ▓");
-                System.out.println("▓               2. Quản lý sản phẩm                ▓");
-                System.out.println("▓               3. Thống kê doanh thu              ▓");
-                System.out.println("▓               0. Thoát                           ▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+                System.out.println("╔═══════════════════════════════════════════════╗");
+                System.out.println("║                    ► ADMIN ◄                  ║");
+                System.out.println("╠═══════════════════════════════════════════════╣");
+                System.out.println("║             1. Quản lý người dùng             ║");
+                System.out.println("║             2. Quản lý sản phẩm               ║");
+                System.out.println("║             3. Thống kê doanh thu             ║");
+                System.out.println("║             0. Thoát                          ║");
+                System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
                 System.out.print("➥ ");
                 choice = Integer.parseInt(scanner.nextLine());
@@ -201,33 +202,33 @@ public class AdminView {
         int choice;
         do {
             try {
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░   AMIN   ░░░░░░░░░░░░░░░░░░░░▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓           1. Thêm người dùng                     ▓");
-                System.out.println("▓           2. Sửa thông tin người dùng            ▓");
-                System.out.println("▓           3. Xóa người dùng                      ▓");
-                System.out.println("▓           4. Hiển thị danh sách người dùng       ▓");
-                System.out.println("▓           5. Quay lại                            ▓");
-                System.out.println("▓           6. Thoát                               ▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+                System.out.println("╔═══════════════════════════════════════════════╗");
+                System.out.println("║               ► ADMIN -> USER ◄               ║");
+                System.out.println("╠═══════════════════════════════════════════════╣");
+                System.out.println("║       1. Hiển thị danh sách người dùng        ║");
+                System.out.println("║       2. Thêm người dùng                      ║");
+                System.out.println("║       3. Sửa thông tin người dùng             ║");
+                System.out.println("║       4. Xóa người dùng                       ║");
+                System.out.println("║       5. Quay lại                             ║");
+                System.out.println("║       0. Thoát                                ║");
+                System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
                 System.out.print("➥ ");
                 choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
                     case 1:
-                        UserView.addUser();
+                        UserView.showUsers();
                         break;
                     case 2:
+                        UserView.addUser();
+                        break;
+                    case 3:
                         UserView.showUsers();
                         MemberView.adminEdit();
                         break;
-                    case 3:
-                        UserView.remove();
-                        UserView.inputId(InputOption.DELETE);
-                        break;
                     case 4:
                         UserView.showUsers();
+                        UserView.remove();
                         break;
                     case 5:
                         renderMenuManager();
@@ -253,17 +254,17 @@ public class AdminView {
         int choice;
         do {
             try {
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓               1. Xem danh sách sản phẩm          ▓");
-                System.out.println("▓               2. Thêm sản phẩm                   ▓");
-                System.out.println("▓               3. Sửa sản phẩm                    ▓");
-                System.out.println("▓               4. Xóa sản phẩm                    ▓");
-                System.out.println("▓               5. Tìm kiếm sảm phẩm               ▓");
-                System.out.println("▓               6. Quay lại                        ▓");
-                System.out.println("▓               0. Thoát                           ▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+                System.out.println("╔═══════════════════════════════════════════════╗");
+                System.out.println("║              ► ADMIN -> PRODUCTS ◄            ║");
+                System.out.println("╠═══════════════════════════════════════════════╣");
+                System.out.println("║       1. Hiển thị danh sản phẩm               ║");
+                System.out.println("║       2. Thêm sản phẩm                        ║");
+                System.out.println("║       3. Sửa sản phẩm                         ║");
+                System.out.println("║       4. Xóa sản phẩm                         ║");
+                System.out.println("║       5. Tìm kiếm sản phẩm                    ║");
+                System.out.println("║       6. Quay lại                             ║");
+                System.out.println("║       0. Thoát                                ║");
+                System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
                 System.out.print("➥ ");
                 choice = Integer.parseInt(scanner.nextLine());
@@ -282,6 +283,7 @@ public class AdminView {
                         productsView.removeProduct();
                         break;
                     case 5:
+                        productsView.findProductsName();
                         break;
                     case 6:
                         renderMenuManager();
@@ -306,25 +308,25 @@ public class AdminView {
         int choice;
         do {
             try {
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓            1. Doanh thu trong ngày               ▓");
-                System.out.println("▓            2. Doanh thu trong tháng              ▓");
-                System.out.println("▓            3. Quay lại                           ▓");
-                System.out.println("▓            0. Thoát                              ▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+                System.out.println("╔═══════════════════════════════════════════════╗");
+                System.out.println("║              ► ADMIN -> TURNOVER ◄            ║");
+                System.out.println("╠═══════════════════════════════════════════════╣");
+                System.out.println("║            1. Doanh thu theo ngày             ║");
+                System.out.println("║            2. Tất cả doanh thu                ║");
+                System.out.println("║            3. Quay lại                        ║");
+                System.out.println("║            0. Thoát                           ║");
+                System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
                 System.out.print("➥ ");
                 choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
                     case 1:
+                        DayTurnOver.sortByOrderDay();
                         break;
                     case 2:
+                        OrderHistoryView.renderOrderHistory();
                         break;
                     case 3:
-                        break;
-                    case 4:
                         renderMenuManager();
                         break;
                     case 0:
@@ -342,5 +344,4 @@ public class AdminView {
         } while (true);
 
     }
-
 }

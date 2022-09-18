@@ -1,5 +1,6 @@
 package cg.hdk.slshop.views;
 
+import cg.hdk.slshop.model.OrderDay;
 import cg.hdk.slshop.model.OrderHistory;
 import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InstantUtils;
@@ -27,8 +28,10 @@ public class OrderHistoryView {
     public static List<String> parseCsvLine(String csvLine){
         return getStrings(csvLine);
     }
-    public void renderOrderHistory(){
-        System.out.printf("\n\t%-16s %-36s %-26s %-15s %-26s %s\n\n", "ID", "Tên Sản Phẩm", "Đơn Giá", "Số Lượng","Tổng Tiền","Ngày Xuất Đơn");
+    public static void renderOrderHistory(){
+        System.out.print("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ TOÀN BỘ DOANH THU ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓");
+        System.out.printf("\n\t|       %-7s |           %-25s |      %-26s |      %-15s |      %-26s |      %-16s | \n", "ID", "Tên Sản Phẩm", "Giá Tiền", "Số Lượng", "Thành Tiền", "Ngày Xuất Đơn");
+        System.out.print("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
         BufferedReader br;
         try {
             String line;
@@ -36,11 +39,32 @@ public class OrderHistoryView {
             while ((line = br.readLine()) != null){
                 printMenu(parseCsvLine(line));
             }
+            renderTotalHistory();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     public static void printMenu(List<String> OrderHistory) {
-            System.out.printf("\n\t%-16s %-36s %-26s %-16s %-26s %s\n\n", OrderHistory.get(0), OrderHistory.get(1), OrderHistory.get(2), OrderHistory.get(3),OrderHistory.get(4), InstantUtils.instantToString(Instant.parse(OrderHistory.get(5))));
+        System.out.printf("\n\t|   %-5s  | %-32s    |     %-26s  |         %-10s   |      %-25s  |      %-13s    |\n",
+                OrderHistory.get(0), OrderHistory.get(1), InstantUtils.doubleToVND(Double.parseDouble(OrderHistory.get(2))), OrderHistory.get(3),
+                InstantUtils.doubleToVND(Double.parseDouble(OrderHistory.get(4))),
+                InstantUtils.instantToString(Instant.parse(OrderHistory.get(5))));
+    }
+    public static Double totalOrderHistory() {
+        List<OrderHistory> orderHistories = findAllOrderHistory();
+        Double totalAllPrice = Double.valueOf(0);
+        for (OrderHistory orderHistory : orderHistories) {
+            totalAllPrice += orderHistory.getTotal();
+        }
+        return totalAllPrice;
+    }
+    public static void renderTotalHistory() {
+        System.out.print("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+        System.out.printf("    |                                                                              Tổng tiền:                              %s           \n", InstantUtils.doubleToVND(totalOrderHistory()));
+        System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n");
+    }
+
+    public static void main(String[] args) {
+        renderOrderHistory();
     }
 }

@@ -6,8 +6,13 @@ import cg.hdk.slshop.service.IUserService;
 import cg.hdk.slshop.service.UserService;
 import cg.hdk.slshop.utils.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+
+import static cg.hdk.slshop.views.OrderItemView.parseCsvLine;
 
 public class UserView {
     private static IUserService userService;
@@ -20,26 +25,38 @@ public class UserView {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void showUsers() {
-        System.out.println("────────────────────────────────────────────────────────────────────────────────────── DANH SÁCH KHÁCH HÀNG ────────────────────────────────────────────────────────────────────────");
-        System.out.printf("\t%-18s %-17s %-31s %-27s %-20s %-18s %-22s %-13s \n", "Id", "Họ và tên", "Số điện thoại", "Email", "Địa chỉ", "Quyền", "Ngày tạo", "Ngày cập nhật");
-        System.out.println("════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
-        List<User> users = userService.findAll();
-        for (User user : users) {
-            System.out.printf(" %-13d |  %-19s |   %-15s |   %-28s   |  %-20s  |    %-8s  | %20s | %20s |\n",
-                    user.getIdUser(),
-                    user.getFullName(),
-                    user.getPhoneNumber(),
-                    user.getEmail(),
-                    user.getAddress(),
-                    user.getRole(),
-                    InstantUtils.instantToString(user.getTimeCreate()),
-                    user.getTimeUpdate() == null ? "" : InstantUtils.instantToString(user.getTimeUpdate())
-            );
+        System.out.println("────────────────────────────────────────────────────────────────────────────────────────────────────────────── DANH SÁCH KHÁCH HÀNG ──────────────────────────────────────────────────────────────────────────────────────────────");
+        System.out.printf("\t%-18s %-22s %-20s %-26s %-33s %-27s %-20s %-25s %-25s \n", "Id", "Username", "Họ và tên", "Số điện thoại", "Địa chỉ","Email",  "Quyền", "Ngày tạo", "Ngày cập nhật");
+        System.out.println("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
+        BufferedReader br = null;
+        try {
+            String line;
+            br = new BufferedReader(new FileReader(PATH_USER));
+            while ((line = br.readLine()) != null) {
+                printMenu(parseCsvLine(line));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null)
+                    br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+        System.out.println("════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
     }
 
-    static long inputId(InputOption option) {
+    public static void printMenu(List<String> userList) {
+        System.out.printf(" %-13s |  %-19s |   %-20s |   %-14s   |  %-25s  |    %-30s  | %10s | %30s |\n",
+                  userList.get(0),userList.get(1), userList.get(3),
+                userList.get(4),userList.get(5),userList.get(6),userList.get(7),userList.get(8)
+
+            );
+        }
+
+    public static long inputId(InputOption option) {
         long id;
         switch (option) {
             case UPDATE:
@@ -108,10 +125,12 @@ public class UserView {
     }
 
     public static void setRole(User user) {
-        System.out.println("========= SET ROLE ==========");
-        System.out.println("∥        1. USER            ∥");
-        System.out.println("∥        2. ADMIN           ∥");
-        System.out.println("=============================");
+        System.out.println("╔════════════════════════════════╗");
+        System.out.println("║          ► SET ROLE ◄          ║");
+        System.out.println("╠════════════════════════════════╣");
+        System.out.println("║       1.     USER              ║");
+        System.out.println("║       2.     ADMIN             ║");
+        System.out.println("╚════════════════════════════════╝");
         System.out.println("Chọn Role: ");
         System.out.print("➥ ");
         int option = scanner.nextInt();
@@ -299,5 +318,9 @@ public class UserView {
                 e.getStackTrace();
             }
         } while (!isTrue);
+    }
+
+    public static void main(String[] args) {
+        showUsers();
     }
 }

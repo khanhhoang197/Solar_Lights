@@ -17,7 +17,7 @@ import java.util.Scanner;
 import static cg.hdk.slshop.views.OrderItemView.parseCsvLine;
 
 public class OrderView {
-    public final String PATH_ORDER = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\Order.csv";
+    public static final String PATH_ORDER = "F:\\CodeGym\\Solar_Lights\\SolarLightsShop\\data\\Order.csv";
     Scanner scanner = new Scanner(System.in);
     public List<Order> orders;
 
@@ -40,21 +40,22 @@ public class OrderView {
         Long idOder = System.currentTimeMillis() / 1000;
         String fullName = UserView.inputFullName(InputOption.ADD);
         String mobile = UserView.inputPhone(InputOption.ADD);
-        System.out.print("\nĐịa chỉ: ");
+        System.out.print("Địa chỉ: ");
         String address = scanner.nextLine();
         Order order = new Order(idOder, fullName, mobile, address);
         order.setTimeCreate(Instant.now());
         orderList.add(order);
         CSVUtils.write(PATH_ORDER, orderList);
     }
-    public void showMenu(List<String> Order) {
-        System.out.println("     |          Số hóa đơn: " + Order.get(0)+"                                                                                                    |");
-        System.out.println("     |          Tên khách hàng: " + Order.get(1)+"                                                                                                       |");
-        System.out.println("     |          Số điện thoại: " + Order.get(2)+"                                                                                                 |");
-        System.out.println("     |          Địa chỉ: " + Order.get(3)+"                                                                                                                   |");
-        System.out.println("     |          Ngày mua hàng: " + InstantUtils.instantToString(Instant.parse(Order.get(4)))+"                                                           |");
+    public static void showMenu(List<String> Order) {
+        System.out.println();
+        System.out.println("     |          Số hóa đơn: " + Order.get(0));
+        System.out.println("     |          Tên khách hàng: " + Order.get(1));
+        System.out.println("     |          Số điện thoại: " + Order.get(2));
+        System.out.println("     |          Địa chỉ: " + Order.get(3));
+        System.out.println("     |          Ngày mua hàng: " + InstantUtils.instantToString(Instant.parse(Order.get(4))));
     }
-    public void showOrder() {
+    public static void showOrder() {
         System.out.println("\t⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸⫸   Bill   ⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷⫷");
         BufferedReader br = null;
         try {

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 public class InstantUtils {
     private static final String PATTERN_FORMAT = "dd-MM-yyyy";
@@ -16,7 +17,7 @@ public class InstantUtils {
         return formatter.format(instant);
     }
     public static String doubleToVND(double value){
-        String patternVND = ",### VND";
+        String patternVND = ",### VNĐ";
         DecimalFormat decimalFormat = new DecimalFormat(patternVND);
         return decimalFormat.format(value);
     }
@@ -25,4 +26,5 @@ public class InstantUtils {
         DecimalFormat decimalFormat = new DecimalFormat(patternVND);
         return decimalFormat.format(value);
     }
+
 }

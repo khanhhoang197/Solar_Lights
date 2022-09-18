@@ -6,8 +6,6 @@ import cg.hdk.slshop.service.UserService;
 import cg.hdk.slshop.utils.AppUtils;
 import cg.hdk.slshop.utils.CSVUtils;
 import cg.hdk.slshop.utils.InputOption;
-import cg.hdk.slshop.utils.InstantUtils;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Scanner;
@@ -21,18 +19,22 @@ public class MemberView {
     static OrderItemView orderItemView = new OrderItemView();
     static ProductsView productsView = new ProductsView();
 
+    public static void main(String[] args) {
+        menuMember();
+    }
     public static void menuMember() {
         do {
             try {
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░   MEMBER   ░░░░░░░░░░░░░░░░░░░▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓               1. Sửa thông tin cá nhân           ▓");
-                System.out.println("▓               2. Xem menu sản phẩm               ▓");
-                System.out.println("▓               3. Mua hàng                        ▓");
-                System.out.println("▓               4. Log Out                         ▓");
-                System.out.println("▓               5. Thoát                           ▓");
-                System.out.println("▓                                                  ▓");
-                System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+                System.out.println("╔═══════════════════════════════════════════════╗");
+                System.out.println("║                 ► KHÁCH HÀNG ◄                ║");
+                System.out.println("╠═══════════════════════════════════════════════╣");
+                System.out.println("║            1. Sửa thông tin cá nhân           ║");
+                System.out.println("║            2. Tìm sản phẩm                    ║");
+                System.out.println("║            3. Xem menu sản phẩm               ║");
+                System.out.println("║            4. Mua hàng                        ║");
+                System.out.println("║            5. Log Out                         ║");
+                System.out.println("║            0. Thoát                           ║");
+                System.out.println("╚═══════════════════════════════════════════════╝");
                 System.out.println("Chọn chức năng: ");
                 System.out.print("➥ ");
                 int choice = Integer.parseInt(scanner.nextLine());
@@ -41,22 +43,49 @@ public class MemberView {
                         editMember();
                         break;
                     case 2:
-                        productsView.showProducts();
-                        break;
+                        productsView.findProductsName();
+                        do {
+                            System.out.println("╔══════════════════════════════════════╗");
+                            System.out.println("║            1. Mua ngay               ║");
+                            System.out.println("║            0. Quay lại               ║");
+                            System.out.println("╚══════════════════════════════════════╝");
+                            System.out.print("➥ ");
+                            String option = scanner.nextLine();
+                            switch (option){
+                                case "1":
+                                    orderView.addOrder();
+                                    orderItemView.addOrderItem();
+                                    OrderView.showOrder();
+                                    OrderItemView.renderTotal();
+                                    break;
+                                case "0":
+                                    menuMember();
+                                    break;
+                                default:
+                                    System.out.println("Nhập không hợp lệ!");
+                                    System.out.println("Vui lòng nhập lại!");
+                                    break;
+                            }
+                        }while (true);
                     case 3:
-                        orderView.addOrder();
-                        orderItemView.addOrderItem();
-                        orderView.showOrder();
-                        OrderItemView.showOrderItem();
-                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-                        System.out.printf("    |                                                                                      Tổng tiền:      %s       |\n", InstantUtils.doubleToVND(orderItemView.totalPrice()));
-                        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔\n");
+                        productsView.showProducts();
+                        System.out.println("╔══════════════════════════════════════╗");
+                        System.out.println("║            1. Tìm sản phẩm           ║");
+                        System.out.println("║            2. Sắp xếp theo giá       ║");
+                        System.out.println("║            3. Quay lại               ║");
+                        System.out.println("╚══════════════════════════════════════╝");
                         break;
                     case 4:
-                        AdminView.loginUser(Role.USER);
+                        orderView.addOrder();
+                        orderItemView.addOrderItem();
+                        OrderView.showOrder();
+                        OrderItemView.renderTotal();
+                        break;
                     case 5:
+                        AdminView.loginUser(Role.USER);
+                    case 0:
                         System.out.println("Tạm biệt! Hẹn gặp lại!");
-                        System.exit(5);
+                        System.exit(0);
                         break;
                     default:
                         System.out.println("Chọn chức năng không đúng, vui lòng nhập lại.");
@@ -159,7 +188,7 @@ public class MemberView {
                             AdminView.userManagement();
                             break;
                         case 4:
-
+                            AdminView.userManagement();
                             break;
                         case 5:
                             System.exit(5);
@@ -173,15 +202,15 @@ public class MemberView {
     }
 
     public static void menuEdit() {
-        System.out.println("▓░░░░░░░░░░░░░░░░░░░    EDIT    ░░░░░░░░░░░░░░░░░░░▓");
-        System.out.println("▓                                                  ▓");
-        System.out.println("▓               1. Sửa số điện thoại               ▓");
-        System.out.println("▓               2. Sửa địa chỉ                     ▓");
-        System.out.println("▓               3. Sửa Email                       ▓");
-        System.out.println("▓               4. Quay lại                        ▓");
-        System.out.println("▓               5. Thoát                           ▓");
-        System.out.println("▓                                                  ▓");
-        System.out.println("▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▓");
+        System.out.println("╔═══════════════════════════════════════════════╗");
+        System.out.println("║                  ► EDIT USER ◄                ║");
+        System.out.println("╠═══════════════════════════════════════════════╣");
+        System.out.println("║             1. Sửa số điện thoại              ║");
+        System.out.println("║             2. Sửa địa chỉ                    ║");
+        System.out.println("║             3. Sửa Email                      ║");
+        System.out.println("║             4. Quay lại                       ║");
+        System.out.println("║             5. Thoát                          ║");
+        System.out.println("╚═══════════════════════════════════════════════╝");
         System.out.println("Chọn chức năng: ");
         System.out.print("➥ ");
     }
