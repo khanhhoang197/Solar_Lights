@@ -231,6 +231,7 @@ public class ProductsView {
             quantity = AppUtils.retryParseInt();
             if (quantity <= 0)
                 System.out.println("Số lượng phải lớn hơn 0");
+            System.out.println("Nhập số lượng: ");
         } while (quantity <= 0);
         return quantity;
     }
@@ -247,25 +248,10 @@ public class ProductsView {
         double price;
         do {
             price = AppUtils.retryParseDouble();
-            if (price <= 0)
-                System.out.println("Giá phải lớn hơn 0");
-        } while (price <= 0);
+            if (price < 10000)
+                System.out.println("Giá phải lớn hơn 10.000đ");
+                System.out.print("Nhập giá sản phẩm: ");
+        } while (price <10000);
         return price;
-    }
-
-    private static void showProductsSort(InputOption inputOption, List<ProductsManager> products) {
-        System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓ DANH SÁCH SẢN PHẨM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓");
-        System.out.printf("\t│\t\t%-6s   ││           %-35s││       %-20s   ││   %-10s        │\n", "ID", "Tên sản phẩm", "Giá sản phẩm", "Số lượng");
-        System.out.println("\t▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔");
-        System.out.println("\tㅑ二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二=二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二二ㅕ");
-        for (ProductsManager product : products) {
-            System.out.printf("\t│\t%-10s   ││   %-40s   ││    %-20s      ││     %-13s   │\n",
-                    product.getIdProduct(),
-                    product.getName(),
-                    InstantUtils.doubleToVND(product.getPrice()),
-                    InstantUtils.quantityProducts(product.getQuantity())
-            );
-        }
-        System.out.println("\t▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓\n");
     }
 }
